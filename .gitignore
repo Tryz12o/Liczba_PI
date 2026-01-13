@@ -1,0 +1,42 @@
+# Build artifacts
+build/*
+!build/README.md
+!build/.gitkeep
+
+*.o
+*.out
+*.exe
+a.out
+
+# Results
+results/*.png
+!results/README.md
+!results/.gitkeep
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+*.egg-info/
+dist/
+build/
+
+# Temporary files
+*.tmp
+*.temp
+.~*

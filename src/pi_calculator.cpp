@@ -1,11 +1,9 @@
 #include <iostream>
 #include <thread>
 #include <vector>
-#include <mutex>
 #include <chrono>
 #include <cmath>
-
-std::mutex pi_mutex;
+#include <atomic>
 
 int main() {
     int n;  // Liczba przedziałów
@@ -17,15 +15,18 @@ int main() {
     std::cout << "Wprowadź liczbę wątków: ";
     std::cin >> num_threads;
     
-    double pi = 0.0;
     double h = 1.0 / n;  // Szerokość przedziału
+    
+    // Wektor do przechowywania wyników z każdego wątku (bez synchronizacji)
+    std::vector<double> thread_results(num_threads, 0.0);
     
     std::vector<std::thread> threads;
     
     auto start = std::chrono::high_resolution_clock::now();
     
     // Lambda do obliczania części całki
-    auto calculate_pi = [&pi, n, h, num_threads](int thread_id) {
+    // KLUCZOWE: każdy wątek pisze do innego indeksu - BRAK RYWALIZACJI
+    auto calculate_pi = [&thread_results, n, h, num_threads](int thread_id) {
         double local_sum = 0.0;
         
         // Każdy wątek oblicza co num_threads-ty przedział
@@ -34,9 +35,8 @@ int main() {
             local_sum += 4.0 / (1.0 + x * x);
         }
         
-        // Dodanie wyniku do globalnej sumy (sekcja krytyczna)
-        std::lock_guard<std::mutex> lock(pi_mutex);
-        pi += local_sum * h;
+        // Każdy wątek zapisuje swój wynik w WŁASNYM indeksie - bez konfliktu!
+        thread_results[thread_id] = local_sum * h;
     };
     
     // Tworzenie i uruchamianie wątków
@@ -47,6 +47,12 @@ int main() {
     // Oczekiwanie na zakończenie wszystkich wątków
     for (auto& t : threads) {
         t.join();
+    }
+    
+    // Sumowanie wyników wszystkich wątków (po zakończeniu wszystkich)
+    double pi = 0.0;
+    for (double result : thread_results) {
+        pi += result;
     }
     
     auto end = std::chrono::high_resolution_clock::now();

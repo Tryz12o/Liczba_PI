@@ -12,7 +12,7 @@ from tqdm import tqdm
 # Konfiguracja testów - mniejsze wartości dla szybkiego testu
 INTERVALS = [1_000_000, 10_000_000, 50_000_000]  # Mniejsze wartości
 THREAD_RANGE = range(1, 11)  # Od 1 do 10 wątków
-EXECUTABLE = "./pi_calculator"
+EXECUTABLE = "../build/pi_calculator"
 
 def run_pi_calculator(intervals, threads):
     """

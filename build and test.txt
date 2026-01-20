@@ -1,0 +1,19 @@
+lscpu | grep -E "^CPU\(s\)|^Thread|^Core|Model name"
+
+
+cd src
+g++ -std=c++11 -O2 -pthread pi_calculator_optimized.cpp -o ../build/pi_calculator
+
+cd src
+g++ -std=c++11 -O2 -pthread pi_calculator.cpp -o ../build/pi_calculator
+
+../build/pi_calculator
+
+cd ./scripts
+python3 benchmark_demo.py
+
+cd ./scripts
+python3 analiza_wydajnosci.py
+
+cd ./scripts
+./monitor.sh

@@ -34,8 +34,13 @@ int main() {
     auto calculate_pi = [&thread_results, n, h, num_threads](int thread_id) {
         double local_sum = 0.0;
         
-        // Każdy wątek oblicza co num_threads-ty przedział
-        for (int i = thread_id; i < n; i += num_threads) {
+        // Podział blokowy - każdy wątek dostaje ciągły zakres
+        int block_size = n / num_threads;
+        int start = thread_id * block_size;
+        int end = (thread_id == num_threads - 1) ? n : start + block_size;
+        
+        // Każdy wątek przetwarza ciągły blok - lepsza lokalność cache
+        for (int i = start; i < end; ++i) {
             double x = (i + 0.5) * h;  // Środek przedziału
             local_sum += 4.0 / (1.0 + x * x);
         }

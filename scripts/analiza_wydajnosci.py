@@ -11,7 +11,7 @@ from tqdm import tqdm
 
 INTERVALS = [10_000_000, 50_000_000]  # Mniejsze wartości dla szybkiego testu
 THREAD_RANGE = range(1, 9)  # Od 1 do 8 wątków
-EXECUTABLE = "./pi_calculator"
+EXECUTABLE = "../build/pi_calculator"
 NUM_RUNS = 3  # Uruchom każdą konfigurację 3 razy dla średniej
 
 def run_pi_calculator(intervals, threads):
